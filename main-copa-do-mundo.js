@@ -47,29 +47,129 @@ function toggleTerms() {
   }
 }
 
-// Renderização dinâmica dos artilheiros (top scorers) - Aguarda elemento
+// API dos artilheiros
+const ARTILHEIROS_API_URL = 'https://cdn.jsdelivr.net/gh/mu-costa/artilheiros@main/artilheiros.json';
+
+// Função para buscar artilheiros da API
+async function fetchArtilheiros() {
+  try {
+    console.log('🔄 Buscando dados dos artilheiros...');
+    const response = await fetch(ARTILHEIROS_API_URL);
+    
+    if (!response.ok) {
+      throw new Error(`Erro na API: ${response.status}`);
+    }
+    
+    const artilheiros = await response.json();
+    console.log('✅ Dados dos artilheiros carregados:', artilheiros.length, 'jogadores');
+    return artilheiros;
+  } catch (error) {
+    console.warn('⚠️ Erro ao buscar artilheiros:', error.message);
+    
+    // Fallback com dados mockados
+    return [
+      {
+        "jogador-foto": "https://s.sde.globo.com/media/person_role/2024/06/14/photo_140x140_jGREsGd.png",
+        "jogador-escudo": "https://s.sde.globo.com/media/organizations/2017/09/22/Bayer-Munique-65.png",
+        "jogador-nome": "Musiala",
+        "jogador-posicao": "Meio-campo",
+        "jogador-gols": "3"
+      },
+      {
+        "jogador-foto": "https://s.sde.globo.com/media/person_role/2019/03/13/e3906271f3caccb8796dc63477b6a451_140x140.png",
+        "jogador-escudo": "https://s.sde.globo.com/media/organizations/2017/09/22/Bayer-Munique-65.png",
+        "jogador-nome": "Coman",
+        "jogador-posicao": "Atacante",
+        "jogador-gols": "2"
+      },
+      {
+        "jogador-foto": "https://s.sde.globo.com/media/person_role/2022/11/01/photo_140x140_yB5pM4u.png",
+        "jogador-escudo": "https://s.sde.globo.com/media/organizations/2025/06/09/Juventus-65x65.png",
+        "jogador-nome": "Kolo Muani",
+        "jogador-posicao": "Atacante",
+        "jogador-gols": "2"
+      },
+      {
+        "jogador-foto": "https://s.sde.globo.com/media/person_role/2019/04/16/2144ecb394516ea16dcf9b465a1bdefe_140x140.png",
+        "jogador-escudo": "https://s.sde.globo.com/media/organizations/2023/07/25/inter-miami-65x65-62396.png",
+        "jogador-nome": "Messi",
+        "jogador-posicao": "Atacante",
+        "jogador-gols": "1"
+      },
+      {
+        "jogador-foto": "https://s.sde.globo.com/media/person_role/2020/06/13/7f7d74c23caddf25e45fc48416ddc6d7_140x140.png",
+        "jogador-escudo": "https://s.sde.globo.com/media/organizations/2021/03/31/65_Inter_de_Milão_2021.png",
+        "jogador-nome": "Lautaro Martínez",
+        "jogador-posicao": "Atacante",
+        "jogador-gols": "1"
+      }
+    ];
+  }
+}
+
+// Renderização dinâmica dos artilheiros (top scorers) - Aguarda elemento e busca da API
 async function renderArtilheiros() {
   try {
     const artilheirosDiv = await waitForElement('#artilheiros-copa', 5000);
+    
+    // Busca dados da API
+    const artilheiros = await fetchArtilheiros();
+    
+    // Ordena por gols (decrescente) e pega os top 10
+    const topArtilheiros = artilheiros
+      .sort((a, b) => parseInt(b['jogador-gols']) - parseInt(a['jogador-gols']))
+      .slice(0, 10);
+    
     artilheirosDiv.innerHTML = '';
-    (window.artilheiros || []).forEach((artilheiro, idx) => {
+    
+    topArtilheiros.forEach((artilheiro, idx) => {
+      const gols = parseInt(artilheiro['jogador-gols']) || 0;
+      const posicao = artilheiro['jogador-posicao'] || 'N/A';
+      
       artilheirosDiv.insertAdjacentHTML('beforeend', `
         <div class="flex-shrink-0 w-40 sm:w-48 md:w-56 rounded-lg bg-gradient-to-b from-neutral-900 to-neutral-800 shadow-lg overflow-hidden flex flex-col items-center justify-between border border-amber-500/20">
           <div class="flex flex-col items-center justify-center bg-gradient-to-r from-amber-600 to-amber-500 p-4 w-full">
             <div class="text-white text-2xl font-bold mb-2">#${idx + 1}</div>
-            <img src="${artilheiro.logo}" alt="${artilheiro.name}" class="w-16 h-16 rounded-full border-2 border-white mb-2 object-cover shadow-md">
-            <span class="block text-sm font-semibold text-white/80">${artilheiro.team}</span>
-            <span class="block text-2xl font-bold text-white">${artilheiro.goals} <span class='text-base font-normal'>gols</span></span>
+            <img src="${artilheiro['jogador-foto']}" alt="${artilheiro['jogador-nome']}" class="w-16 h-16 rounded-full border-2 border-white mb-2 object-cover shadow-md" onerror="this.src='https://via.placeholder.com/64x64/cccccc/666666?text=?'">
+            <div class="flex items-center gap-1 mb-2">
+              <img src="${artilheiro['jogador-escudo']}" alt="Escudo" class="w-8 h-8 rounded-full border border-white object-cover" onerror="this.src='https://via.placeholder.com/32x32/cccccc/666666?text=?'">
+              <span class="block text-xs font-semibold text-white/80 truncate max-w-[100px]">${posicao}</span>
+            </div>
+            <span class="block text-2xl font-bold text-white">${gols} <span class='text-base font-normal'>gol${gols !== 1 ? 's' : ''}</span></span>
           </div>
           <div class="p-3 w-full text-center">
-            <h4 class="text-base font-semibold text-amber-300">${artilheiro.name}</h4>
+            <h4 class="text-base font-semibold text-amber-300 truncate">${artilheiro['jogador-nome']}</h4>
           </div>
         </div>
       `);
     });
-    console.log('✅ Artilheiros renderizados com sucesso');
+    
+    console.log('✅ Artilheiros renderizados com sucesso:', topArtilheiros.length, 'jogadores');
   } catch (error) {
     console.warn('⚠️ Container de artilheiros não encontrado:', error.message);
+  }
+}
+
+// Função para garantir que os artilheiros sejam renderizados também na variável global window.artilheiros (compatibilidade)
+async function setupArtilheirosGlobal() {
+  try {
+    const artilheiros = await fetchArtilheiros();
+    
+    // Converte formato da API para formato usado anteriormente
+    window.artilheiros = artilheiros
+      .sort((a, b) => parseInt(b['jogador-gols']) - parseInt(a['jogador-gols']))
+      .slice(0, 10)
+      .map(artilheiro => ({
+        name: artilheiro['jogador-nome'],
+        logo: artilheiro['jogador-foto'],
+        team: artilheiro['jogador-posicao'],
+        goals: parseInt(artilheiro['jogador-gols']) || 0
+      }));
+    
+    console.log('✅ window.artilheiros configurado com', window.artilheiros.length, 'jogadores');
+  } catch (error) {
+    console.warn('⚠️ Erro ao configurar artilheiros globais:', error.message);
+    window.artilheiros = [];
   }
 }
 
@@ -218,10 +318,159 @@ function renderStandingsGroup(idx) {
   container.insertAdjacentHTML('beforeend', table);
 }
 
+// Função para renderizar ranking completo dos artilheiros em tabela
+async function renderRankingArtilheiros() {
+  try {
+    const rankingDiv = await waitForElement('#ranking-artilheiros', 5000);
+    
+    // Busca dados da API
+    const artilheiros = await fetchArtilheiros();
+    
+    // Ordena por gols (decrescente)
+    const rankingCompleto = artilheiros
+      .sort((a, b) => parseInt(b['jogador-gols']) - parseInt(a['jogador-gols']));
+    
+    rankingDiv.innerHTML = `
+      <div class='overflow-x-auto rounded-lg border border-gray-200 bg-white shadow mt-4'>
+        <h3 class='text-lg font-bold text-amber-600 mb-2 px-4 pt-4'>🏆 Ranking de Artilheiros - Copa do Mundo de Clubes</h3>
+        <table class='min-w-[600px] w-full bg-white rounded-lg'>
+          <thead class='bg-gradient-to-r from-amber-50 to-amber-100'>
+            <tr>
+              <th class='px-3 py-2 text-xs font-bold text-gray-700 uppercase tracking-wider'>Pos</th>
+              <th class='px-3 py-2 text-xs font-bold text-gray-700 uppercase tracking-wider text-left'>Jogador</th>
+              <th class='px-3 py-2 text-xs font-bold text-gray-700 uppercase tracking-wider text-left'>Posição</th>
+              <th class='px-3 py-2 text-xs font-bold text-gray-700 uppercase tracking-wider'>Gols</th>
+            </tr>
+          </thead>
+          <tbody class='bg-white divide-y divide-gray-200'>
+            ${rankingCompleto.map((artilheiro, idx) => {
+              const gols = parseInt(artilheiro['jogador-gols']) || 0;
+              const posicao = artilheiro['jogador-posicao'] || 'N/A';
+              
+              return `
+                <tr class='hover:bg-amber-50 transition ${idx < 3 ? 'bg-amber-25' : ''}'>
+                  <td class='px-3 py-2 text-center font-bold ${idx === 0 ? 'text-amber-600' : idx < 3 ? 'text-amber-500' : 'text-gray-700'}'>${idx + 1}</td>
+                  <td class='px-3 py-2 flex items-center gap-3'>
+                    <img src='${artilheiro['jogador-foto']}' alt='${artilheiro['jogador-nome']}' class='w-8 h-8 rounded-full border object-cover' onerror="this.src='https://via.placeholder.com/32x32/cccccc/666666?text=?'" />
+                    <div class='flex flex-col'>
+                      <span class='font-semibold text-gray-900'>${artilheiro['jogador-nome']}</span>
+                      <div class='flex items-center gap-1'>
+                        <img src='${artilheiro['jogador-escudo']}' alt='Escudo' class='w-4 h-4 rounded object-cover' onerror="this.src='https://via.placeholder.com/16x16/cccccc/666666?text=?'" />
+                        <span class='text-xs text-gray-500'>Clube</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class='px-3 py-2 text-sm text-gray-600'>${posicao}</td>
+                  <td class='px-3 py-2 text-center'>
+                    <span class='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${idx === 0 ? 'bg-amber-100 text-amber-800' : idx < 3 ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}'>
+                      ${gols} gol${gols !== 1 ? 's' : ''}
+                    </span>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+    
+    console.log('✅ Ranking de artilheiros renderizado:', rankingCompleto.length, 'jogadores');
+  } catch (error) {
+    console.warn('⚠️ Container de ranking de artilheiros não encontrado:', error.message);
+  }
+}
+
+// Função para renderizar o ranking completo na seção Topscore rankings
+async function renderTopscoreRankings() {
+  try {
+    const rankingContainer = await waitForElement('#topscore-rankings', 5000);
+    
+    // Busca dados da API
+    const artilheiros = await fetchArtilheiros();
+    
+    // Ordena por gols (decrescente) e pega os top 15
+    const topArtilheiros = artilheiros
+      .sort((a, b) => parseInt(b['jogador-gols']) - parseInt(a['jogador-gols']))
+      .slice(0, 15);
+      // Cria o cabeçalho
+    const headerHTML = `
+      <div class="w-full max-w-4xl flex flex-col justify-start items-start gap-2">
+        <div class="w-full h-10 py-2.5 border-t border-b border-white inline-flex justify-start items-center gap-2">
+          <div class="flex-1 justify-center text-white text-base font-normal font-['Inter'] uppercase leading-tight">ranking</div>
+          <div class="text-right justify-center text-white text-base font-normal font-['Inter'] uppercase leading-tight">gols</div>
+        </div>
+      </div>
+    `;
+      // Cria o conteúdo da lista
+    const playersHTML = topArtilheiros.map((artilheiro, idx) => {
+      const gols = parseInt(artilheiro['jogador-gols']) || 0;
+      const posicao = artilheiro['jogador-posicao'] || 'N/A';
+      const nomeCompleto = artilheiro['jogador-nome'] || 'Nome não disponível';
+      const isTop3 = idx < 3;
+        return `
+        <div class="w-full py-3.5 border-b border-white inline-flex justify-start items-center gap-2 hover:bg-white/5 transition-colors duration-200">
+          <div class="w-4 h-7 justify-center ${isTop3 ? 'text-amber-400' : 'text-white/50'} text-3xl font-normal font-['Open_Sans']">${idx + 1}</div>
+          <div class="flex justify-start items-center gap-1">
+            <img class="w-12 h-12 relative rounded-[80px] ${isTop3 ? 'border-2 border-amber-400' : 'border border-white/20'} object-cover" 
+                 src="${artilheiro['jogador-foto']}" 
+                 alt="${nomeCompleto}"
+                 onerror="this.src='https://via.placeholder.com/48x48/374151/9CA3AF?text=${encodeURIComponent(nomeCompleto.charAt(0))}'" />
+            <img class="w-6 h-6 relative object-cover rounded" 
+                 src="${artilheiro['jogador-escudo']}" 
+                 alt="Escudo do time"
+                 onerror="this.src='https://via.placeholder.com/24x24/374151/9CA3AF?text=?'" />
+          </div>
+          <div class="w-32 inline-flex flex-col justify-start items-start overflow-hidden">
+            <div class="self-stretch justify-start text-white text-xl font-normal font-['Inter'] truncate">${nomeCompleto}</div>
+            <div class="self-stretch justify-start text-white/50 text-[10px] font-bold font-['Inter'] uppercase truncate">${posicao}</div>
+          </div>
+          <div class="flex-1 text-right justify-center ${isTop3 ? 'text-amber-400' : 'text-white'} text-2xl font-bold font-['Inter'] leading-relaxed">${gols}</div>
+        </div>
+      `;
+    }).join('');    // Monta o HTML completo
+    const containerHTML = `
+      ${headerHTML}
+      <div class="w-full max-w-4xl flex-1 border-b border-white flex flex-col justify-start items-start overflow-y-auto max-h-[400px] scrollbar-thin">
+        ${playersHTML}
+      </div>
+    `;
+    
+    rankingContainer.innerHTML = containerHTML;
+    
+    console.log('✅ Topscore rankings renderizado:', topArtilheiros.length, 'jogadores');
+  } catch (error) {
+    console.warn('⚠️ Container de topscore rankings não encontrado:', error.message);
+    
+    // Se não encontrar o container, tenta criar uma versão simplificada
+    try {
+      const fallbackContainer = document.createElement('div');
+      fallbackContainer.id = 'topscore-rankings-fallback';
+      fallbackContainer.className = 'p-4 text-white bg-red-900/20 rounded mx-4 my-2';
+      fallbackContainer.innerHTML = '<p>⚠️ Seção de artilheiros não encontrada no HTML. Verifique se o elemento #topscore-rankings existe.</p>';
+      
+      // Tenta inserir próximo ao elemento artilheiros-copa se existir
+      const artilheirosContainer = document.getElementById('artilheiros-copa');
+      if (artilheirosContainer && artilheirosContainer.parentElement) {
+        artilheirosContainer.parentElement.appendChild(fallbackContainer);
+      } else {
+        document.body.appendChild(fallbackContainer);
+      }
+    } catch (fallbackError) {
+      console.error('❌ Erro no fallback do topscore:', fallbackError);
+    }
+  }
+}
+
 // Inicialização principal - Aguarda DOM ou executa imediatamente se já carregado
-function initializePage() {
+async function initializePage() {
+  // Configura dados globais primeiro
+  await setupArtilheirosGlobal();
+  
+  // Depois renderiza os componentes
   getStandings();
   renderArtilheiros();
+  renderRankingArtilheiros();
+  renderTopscoreRankings();
 }
 
 // Executa quando DOM estiver pronto
@@ -279,7 +528,6 @@ if (document.readyState === 'loading') {
 })();
 
 // Betslip remover
-
 document.addEventListener("DOMContentLoaded", () => {
   const observer = new MutationObserver(() => {
     const containerRight = document.querySelector(".view-widget-container-right");
