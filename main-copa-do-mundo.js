@@ -1,5 +1,5 @@
 // --- JS para SPA/CMS - Copa do Mundo de Clubes ---
-// Atualizado em 18:03 às 20/06/25
+// Atualizado em 18:34 às 20/06/25
 
 
 // Função para aguardar elemento aparecer no DOM
@@ -128,19 +128,18 @@ async function renderArtilheiros() {
       const gols = parseInt(artilheiro['jogador-gols']) || 0;
       const posicao = artilheiro['jogador-posicao'] || 'N/A';
       
-      artilheirosDiv.insertAdjacentHTML('beforeend', `
-        <div class="flex-shrink-0 w-40 sm:w-48 md:w-56 rounded-lg bg-gradient-to-b from-neutral-900 to-neutral-800 shadow-lg overflow-hidden flex flex-col items-center justify-between border border-amber-500/20">
-          <div class="flex flex-col items-center justify-center bg-gradient-to-r from-amber-600 to-amber-500 p-4 w-full">
-            <div class="text-white text-2xl font-bold mb-2">#${idx + 1}</div>
-            <img src="${artilheiro['jogador-foto']}" alt="${artilheiro['jogador-nome']}" class="w-16 h-16 rounded-full border-2 border-white mb-2 object-cover shadow-md" onerror="this.src='https://via.placeholder.com/64x64/cccccc/666666?text=?'">
-            <div class="flex items-center gap-1 mb-2">
-              <img src="${artilheiro['jogador-escudo']}" alt="Escudo" class="w-8 h-8 rounded-full border border-white object-cover" onerror="this.src='https://via.placeholder.com/32x32/cccccc/666666?text=?'">
-              <span class="block text-xs font-semibold text-white/80 truncate max-w-[100px]">${posicao}</span>
+      artilheirosDiv.insertAdjacentHTML('beforeend', `        <div class="flex-shrink-0 w-36 sm:w-40 md:w-48 lg:w-56 rounded-lg bg-gradient-to-b from-neutral-900 to-neutral-800 shadow-lg overflow-hidden flex flex-col items-center justify-between border border-amber-500/20">
+          <div class="flex flex-col items-center justify-center bg-gradient-to-r from-amber-600 to-amber-500 p-3 sm:p-4 w-full">
+            <div class="text-white text-xl sm:text-2xl font-bold mb-1 sm:mb-2">#${idx + 1}</div>
+            <img src="${artilheiro['jogador-foto']}" alt="${artilheiro['jogador-nome']}" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white mb-1 sm:mb-2 object-cover shadow-md bg-white" onerror="this.src='https://via.placeholder.com/64x64/cccccc/666666?text=?'">
+            <div class="flex items-center gap-1 mb-1 sm:mb-2">
+              <img src="${artilheiro['jogador-escudo']}" alt="Escudo" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-white object-cover" onerror="this.src='https://via.placeholder.com/32x32/cccccc/666666?text=?'">
+              <span class="block text-xs font-semibold text-white/80 truncate max-w-[80px] sm:max-w-[100px]">${posicao}</span>
             </div>
-            <span class="block text-2xl font-bold text-white">${gols} <span class='text-base font-normal'>gol${gols !== 1 ? 's' : ''}</span></span>
+            <span class="block text-xl sm:text-2xl font-bold text-white">${gols} <span class='text-sm sm:text-base font-normal'>gol${gols !== 1 ? 's' : ''}</span></span>
           </div>
-          <div class="p-3 w-full text-center">
-            <h4 class="text-base font-semibold text-amber-300 truncate">${artilheiro['jogador-nome']}</h4>
+          <div class="p-2 sm:p-3 w-full text-center">
+            <h4 class="text-sm sm:text-base font-semibold text-amber-300 break-words leading-tight">${artilheiro['jogador-nome']}</h4>
           </div>
         </div>
       `);
@@ -349,22 +348,19 @@ async function renderRankingArtilheiros() {
               const gols = parseInt(artilheiro['jogador-gols']) || 0;
               const posicao = artilheiro['jogador-posicao'] || 'N/A';
               
-              return `
-                <tr class='hover:bg-amber-50 transition ${idx < 3 ? 'bg-amber-25' : ''}'>
-                  <td class='px-3 py-2 text-center font-bold ${idx === 0 ? 'text-amber-600' : idx < 3 ? 'text-amber-500' : 'text-gray-700'}'>${idx + 1}</td>
-                  <td class='px-3 py-2 flex items-center gap-3'>
-                    <img src='${artilheiro['jogador-foto']}' alt='${artilheiro['jogador-nome']}' class='w-8 h-8 rounded-full border object-cover' onerror="this.src='https://via.placeholder.com/32x32/cccccc/666666?text=?'" />
+              return `                <tr class='hover:bg-amber-50 transition ${idx < 3 ? 'bg-amber-25' : ''}'>
+                  <td class='px-2 sm:px-3 py-1 sm:py-2 text-center font-bold ${idx === 0 ? 'text-amber-600' : idx < 3 ? 'text-amber-500' : 'text-gray-700'}'>${idx + 1}</td><td class='px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-2 sm:gap-3'>
+                    <img src='${artilheiro['jogador-foto']}' alt='${artilheiro['jogador-nome']}' class='w-6 h-6 sm:w-8 sm:h-8 rounded-full border object-cover bg-white' onerror="this.src='https://via.placeholder.com/32x32/cccccc/666666?text=?'" />
                     <div class='flex flex-col'>
-                      <span class='font-semibold text-gray-900'>${artilheiro['jogador-nome']}</span>
+                      <span class='font-semibold text-gray-900 text-sm sm:text-base'>${artilheiro['jogador-nome']}</span>
                       <div class='flex items-center gap-1'>
-                        <img src='${artilheiro['jogador-escudo']}' alt='Escudo' class='w-4 h-4 rounded object-cover' onerror="this.src='https://via.placeholder.com/16x16/cccccc/666666?text=?'" />
+                        <img src='${artilheiro['jogador-escudo']}' alt='Escudo' class='w-3 h-3 sm:w-4 sm:h-4 rounded object-cover' onerror="this.src='https://via.placeholder.com/16x16/cccccc/666666?text=?'" />
                         <span class='text-xs text-gray-500'>Clube</span>
                       </div>
                     </div>
-                  </td>
-                  <td class='px-3 py-2 text-sm text-gray-600'>${posicao}</td>
-                  <td class='px-3 py-2 text-center'>
-                    <span class='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${idx === 0 ? 'bg-amber-100 text-amber-800' : idx < 3 ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}'>
+                  </td>                  <td class='px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-gray-600'>${posicao}</td>
+                  <td class='px-2 sm:px-3 py-1 sm:py-2 text-center'>
+                    <span class='inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${idx === 0 ? 'bg-amber-100 text-amber-800' : idx < 3 ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}'>
                       ${gols} gol${gols !== 1 ? 's' : ''}
                     </span>
                   </td>
@@ -393,13 +389,12 @@ async function renderTopscoreRankings() {
     // Ordena por gols (decrescente) e pega os top 15
     const topArtilheiros = artilheiros
       .sort((a, b) => parseInt(b['jogador-gols']) - parseInt(a['jogador-gols']))
-      .slice(0, 15);
-      // Cria o cabeçalho
+      .slice(0, 15);      // Cria o cabeçalho
     const headerHTML = `
-      <div class="w-full max-w-4xl flex flex-col justify-start items-start gap-2">
-        <div class="w-full h-10 py-2.5 border-t border-b border-white inline-flex justify-start items-center gap-2">
-          <div class="flex-1 justify-center text-white text-base font-normal font-['Inter'] uppercase leading-tight">ranking</div>
-          <div class="text-right justify-center text-white text-base font-normal font-['Inter'] uppercase leading-tight">gols</div>
+      <div class="w-full max-w-4xl flex flex-col justify-start items-start gap-1 sm:gap-2">
+        <div class="w-full h-8 sm:h-10 py-2 sm:py-2.5 border-t border-b border-white inline-flex justify-start items-center gap-2">
+          <div class="flex-1 justify-center text-white text-sm sm:text-base font-normal font-['Inter'] uppercase leading-tight">ranking</div>
+          <div class="text-right justify-center text-white text-sm sm:text-base font-normal font-['Inter'] uppercase leading-tight">gols</div>
         </div>
       </div>
     `;
@@ -409,30 +404,29 @@ async function renderTopscoreRankings() {
       const posicao = artilheiro['jogador-posicao'] || 'N/A';
       const nomeCompleto = artilheiro['jogador-nome'] || 'Nome não disponível';
       const isTop3 = idx < 3;
-        return `
-        <div class="w-full py-3.5 border-b border-white inline-flex justify-start items-center gap-2 hover:bg-white/5 transition-colors duration-200">
-          <div class="w-4 h-7 justify-center ${isTop3 ? 'text-amber-400' : 'text-white/50'} text-3xl font-normal font-['Open_Sans']">${idx + 1}</div>
-          <div class="flex justify-start items-center gap-1">
-            <img class="w-12 h-12 relative rounded-[80px] ${isTop3 ? 'border-2 border-amber-400' : 'border border-white/20'} object-cover" 
+        return `        <div class="w-full py-2 sm:py-3.5 border-b border-white inline-flex justify-start items-center gap-2 sm:gap-4 hover:bg-white/5 transition-colors duration-200">
+          <div class="w-6 sm:w-8 h-7 justify-center ${isTop3 ? 'text-amber-400' : 'text-white/50'} text-2xl sm:text-3xl font-normal font-['Open_Sans']">${idx + 1}</div>
+          <div class="flex justify-start items-center gap-1 sm:gap-2 ml-1 sm:ml-2">
+            <img class="w-10 h-10 sm:w-12 sm:h-12 relative rounded-[80px] ${isTop3 ? 'border-2 border-amber-400' : 'border border-white/20'} object-cover bg-white" 
                  src="${artilheiro['jogador-foto']}" 
                  alt="${nomeCompleto}"
                  onerror="this.src='https://via.placeholder.com/48x48/374151/9CA3AF?text=${encodeURIComponent(nomeCompleto.charAt(0))}'" />
-            <img class="w-6 h-6 relative object-cover rounded" 
+            <img class="w-5 h-5 sm:w-6 sm:h-6 relative object-cover rounded" 
                  src="${artilheiro['jogador-escudo']}" 
                  alt="Escudo do time"
                  onerror="this.src='https://via.placeholder.com/24x24/374151/9CA3AF?text=?'" />
           </div>
-          <div class="w-32 inline-flex flex-col justify-start items-start overflow-hidden">
-            <div class="self-stretch justify-start text-white text-xl font-normal font-['Inter'] truncate">${nomeCompleto}</div>
-            <div class="self-stretch justify-start text-white/50 text-[10px] font-bold font-['Inter'] uppercase truncate">${posicao}</div>
+          <div class="flex-1 min-w-0 inline-flex flex-col justify-start items-start">
+            <div class="w-full justify-start text-white text-lg sm:text-xl font-normal font-['Inter'] overflow-hidden whitespace-nowrap text-ellipsis">${nomeCompleto}</div>
+            <div class="w-full justify-start text-white/50 text-[9px] sm:text-[10px] font-bold font-['Inter'] uppercase overflow-hidden whitespace-nowrap text-ellipsis">${posicao}</div>
           </div>
-          <div class="flex-1 text-right justify-center ${isTop3 ? 'text-amber-400' : 'text-white'} text-2xl font-bold font-['Inter'] leading-relaxed">${gols}</div>
+          <div class="w-12 sm:w-16 text-right justify-center ${isTop3 ? 'text-amber-400' : 'text-white'} text-xl sm:text-2xl font-bold font-['Inter'] leading-relaxed">${gols}</div>
         </div>
       `;
     }).join('');    // Monta o HTML completo
     const containerHTML = `
       ${headerHTML}
-      <div class="w-full max-w-4xl flex-1 border-b border-white flex flex-col justify-start items-start overflow-y-auto max-h-[400px] scrollbar-thin">
+      <div class="w-full max-w-4xl flex-1 border-b border-white flex flex-col justify-start items-start overflow-y-auto max-h-[300px] sm:max-h-[400px] scrollbar-thin">
         ${playersHTML}
       </div>
     `;
