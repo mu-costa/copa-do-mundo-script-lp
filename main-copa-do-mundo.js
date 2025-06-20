@@ -1,4 +1,6 @@
 // --- JS para SPA/CMS - Copa do Mundo de Clubes ---
+// Atualizado em 18:03 às 20/06/25
+
 
 // Função para aguardar elemento aparecer no DOM
 function waitForElement(selector, timeout = 10000) {
