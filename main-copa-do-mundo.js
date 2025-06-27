@@ -50,7 +50,7 @@ function toggleTerms() {
 }
 
 // API dos artilheiros
-const ARTILHEIROS_API_URL = 'https://raw.githubusercontent.com/mu-costa/artilheiros/refs/heads/main/artilheiros.json';
+const ARTILHEIROS_API_URL = 'https://cdn.jsdelivr.net/gh/mu-costa/artilheiros@refs/heads/main/artilheiros.json';
 
 // Função para buscar artilheiros da API
 async function fetchArtilheiros() {
