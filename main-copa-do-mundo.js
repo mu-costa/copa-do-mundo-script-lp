@@ -130,7 +130,7 @@ async function renderArtilheiros() {
       
       artilheirosDiv.insertAdjacentHTML('beforeend', `        <div class="flex-shrink-0 w-36 sm:w-40 md:w-48 lg:w-56 rounded-lg bg-gradient-to-b from-neutral-900 to-neutral-800 shadow-lg overflow-hidden flex flex-col items-center justify-between border border-amber-500/20">
           <div class="flex flex-col items-center justify-center bg-gradient-to-r from-amber-600 to-amber-500 p-3 sm:p-4 w-full">
-            <div class="text-white text-xl sm:text-2xl font-bold mb-1 sm:mb-2">#${idx + 1}</div>
+            <div class="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">#${idx + 1}</div>
             <img src="${artilheiro['jogador-foto']}" alt="${artilheiro['jogador-nome']}" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white mb-1 sm:mb-2 object-cover shadow-md bg-white" onerror="this.src='https://via.placeholder.com/64x64/cccccc/666666?text=?'">
             <div class="flex items-center gap-1 mb-1 sm:mb-2">
               <img src="${artilheiro['jogador-escudo']}" alt="Escudo" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-white object-cover" onerror="this.src='https://via.placeholder.com/32x32/cccccc/666666?text=?'">
