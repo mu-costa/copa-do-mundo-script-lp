@@ -1,5 +1,5 @@
 // --- JS para SPA/CMS - Copa do Mundo de Clubes ---
-// Atualizado em 18:29 às 27/06/25
+// Atualizado em 09:54 às 28/06/25
 
 
 // Função para aguardar elemento aparecer no DOM
